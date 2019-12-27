@@ -11,17 +11,30 @@ command = input("Enter command: ")
 
 # Commands
 def command_match(player1, player2):
+    rank1_initial = players[player1]
+    rank2_initial = players[player2]
+
     result = env.rate_1vs1(players[player1], players[player2])
     players[player1] = result[0]
     players[player2] = result[1]
+
+    rank1_final = players[player1]
+    rank2_final = players[player2]
+
+    print(f"{player1} wins against {player2}!")
+    print(f"{player1}: +{round(rank1_final.mu - rank1_initial.mu)} to {round(rank1_final.mu)}")
+    print(f"{player2}: -{abs(round(rank2_final.mu - rank2_initial.mu))} to {round(rank2_final.mu)}")
 def command_add(name, mu=None):
     if mu == None:
         mu = 1500
     players[name] = env.create_rating(mu=mu)
     print("Adding player.")
 def command_ranks():
-    for player in players.items():
-        print(f"{player[0]} - {player[1].mu}")
+    ranks = {k: v for k, v in sorted(players.items(), key=lambda item: item[1].mu, reverse=True)}
+    i = 1
+    for player in ranks:
+        print(f"{i}. {player} - {round(players[player].mu)}")
+        i += 1
 def command_remove(name):
     choice = input(f"Are you sure you want to remove player \"{name}\"? (YES or NO): ")
     if choice == "YES":
