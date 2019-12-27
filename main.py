@@ -3,14 +3,18 @@ import pickle
 from os import path
 import shlex
 
+DEBUG = True
+
 env = glicko2.Glicko2()
-
 players = {}
-
 command = input("Enter command: ")
 
 # Commands
 def command_match(player1, player2):
+    if (not player1 in players) or (not player2 in players):
+        print("Player unknown.")
+        return
+    
     rank1_initial = players[player1]
     rank2_initial = players[player2]
 
@@ -24,6 +28,10 @@ def command_match(player1, player2):
     print(f"{player1} wins against {player2}!")
     print(f"{player1}: +{round(rank1_final.mu - rank1_initial.mu)} to {round(rank1_final.mu)}")
     print(f"{player2}: -{abs(round(rank2_final.mu - rank2_initial.mu))} to {round(rank2_final.mu)}")
+
+    if DEBUG:
+        print(f"[PLAYER 1: {rank1_initial} -> {rank1_final}]")
+        print(f"[PLAYER 2: {rank2_initial} -> {rank2_final}]")
 def command_add(name, mu=None):
     if mu == None:
         mu = 1500
