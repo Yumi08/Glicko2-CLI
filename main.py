@@ -1,32 +1,55 @@
 import glicko2
 import pickle
 from os import path
+import shlex
 
 env = glicko2.Glicko2()
 
-class Player(object):
-    def __init__(self, name, rating):
-        self.name = name
-        self.rating = rating
-
-players = []
+players = {}
 
 command = input("Enter command: ")
 
+# Commands
+def command_add(name):
+    players[name] = env.create_rating()
+    print("Adding player.")
+def command_ranks():
+    for player in players.items():
+        print(f"{player[0]} - {player[1].mu}")
+def command_remove(name):
+    choice = input(f"Are you sure you want to remove player \"{name}\"? (YES or NO): ")
+    if choice == "YES":
+        del players[name]
+        print(f"Removing player \"{name}\"...")
+    else:
+        print("Cancelling...")
+def command_reset():
+    choice = input("Are you sure you want to delete ALL player data? (YES or NO): ")
+    if choice == "YES":
+        players.clear()
+        print("RESETTING ALL PLAYERS...")
+    else:
+        print("Cancelling...")
+
 # Load players
 if path.exists("ratings.pkl"):
-    with open("ratings.pkl", "rb") as input:
-        players = pickle.load(input)
+    with open("ratings.pkl", "rb") as file:
+        players = pickle.load(file)
 
-if command.split()[0] == "add":
-    players.append(Player(command.split()[1], env.create_rating()))
-    print("Adding player.")
+# Execute commands
+if command != "":
+    if shlex.split(command)[0] == "add":
+        command_add(shlex.split(command)[1])
+    elif shlex.split(command)[0] == "ranks":
+        command_ranks()
+    elif shlex.split(command)[0] == "remove":
+        command_remove(shlex.split(command)[1])
+    elif shlex.split(command)[0] == "reset":
+        command_reset()
+    else:
+        print("Unknown command.")
 else:
-    print("Unknown command.")
-
-# Print out player rankings
-for player in players:
-    print(f"{player.name} : {player.rating.mu}")
+    print("Nevermind.")
 
 # Save players
 with open("ratings.pkl", "wb") as output:
