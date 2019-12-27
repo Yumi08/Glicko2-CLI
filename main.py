@@ -11,10 +11,18 @@ class Player(object):
 
 players = []
 
+command = input("Enter command: ")
+
 # Load players
 if path.exists("ratings.pkl"):
     with open("ratings.pkl", "rb") as input:
         players = pickle.load(input)
+
+if command.split()[0] == "add":
+    players.append(Player(command.split()[1], env.create_rating()))
+    print("Adding player.")
+else:
+    print("Unknown command.")
 
 # Print out player rankings
 for player in players:
