@@ -10,6 +10,10 @@ players = {}
 command = input("Enter command: ")
 
 # Commands
+def command_match(player1, player2):
+    result = env.rate_1vs1(players[player1], players[player2])
+    players[player1] = result[0]
+    players[player2] = result[1]
 def command_add(name, mu=None):
     if mu == None:
         mu = 1500
@@ -40,7 +44,9 @@ if path.exists("ratings.pkl"):
 
 # Execute commands
 if command != "":
-    if shlex.split(command)[0] == "add":
+    if shlex.split(command)[0] == "match":
+        command_match(shlex.split(command)[1], shlex.split(command)[2])
+    elif shlex.split(command)[0] == "add":
         if len(shlex.split(command)) == 2:
             command_add(shlex.split(command)[1])
         else:
