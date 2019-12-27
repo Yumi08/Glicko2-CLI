@@ -10,8 +10,10 @@ players = {}
 command = input("Enter command: ")
 
 # Commands
-def command_add(name):
-    players[name] = env.create_rating()
+def command_add(name, mu=None):
+    if mu == None:
+        mu = 1500
+    players[name] = env.create_rating(mu=mu)
     print("Adding player.")
 def command_ranks():
     for player in players.items():
@@ -39,7 +41,10 @@ if path.exists("ratings.pkl"):
 # Execute commands
 if command != "":
     if shlex.split(command)[0] == "add":
-        command_add(shlex.split(command)[1])
+        if len(shlex.split(command)) == 2:
+            command_add(shlex.split(command)[1])
+        else:
+            command_add(shlex.split(command)[1], shlex.split(command)[2])
     elif shlex.split(command)[0] == "ranks":
         command_ranks()
     elif shlex.split(command)[0] == "remove":
