@@ -1,9 +1,10 @@
 import glicko2
 import pickle
-from os import path
+import os
 import shlex
+from dotenv import load_dotenv
 
-DEBUG = True
+load_dotenv()
 
 env = glicko2.Glicko2()
 players = {}
@@ -28,7 +29,7 @@ def command_match(player1, player2):
     print(f"{player1}: +{round(rank1_final.mu - rank1_initial.mu)} to {round(rank1_final.mu)}")
     print(f"{player2}: -{abs(round(rank2_final.mu - rank2_initial.mu))} to {round(rank2_final.mu)}")
 
-    if DEBUG:
+    if os.getenv("DEBUG") == "True":
         print(f"[PLAYER 1: {rank1_initial} -> {rank1_final}]")
         print(f"[PLAYER 2: {rank2_initial} -> {rank2_final}]")
 def command_info(player):
@@ -66,9 +67,12 @@ def command_reset():
         print("Cancelling...")
 
 # Load players
-if path.exists("ratings.pkl"):
+if os.path.exists("ratings.pkl"):
     with open("ratings.pkl", "rb") as file:
         players = pickle.load(file)
+
+if os.getenv("DEBUG") == "True":
+    print("DEBUG MODE")
 
 while True:
     command = input("Enter command: ")
