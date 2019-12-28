@@ -4,7 +4,7 @@ import os
 import shlex
 from dotenv import load_dotenv
 
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 
 load_dotenv()
 
@@ -69,6 +69,17 @@ def command_remove(name):
         print(f"Removing player \"{name}\"...")
     else:
         print("Cancelling...")
+def command_rename(playername1, playername2):
+    if not playername1 in players:
+        print("Player unknown.")
+        return
+    
+    if playername2 in players:
+        print("Player name already taken.")
+        return
+    
+    players[playername2] = players[playername1]
+    del players[playername1]    
 def command_reset():
     choice = input("Are you sure you want to delete ALL player data? (YES or NO): ")
     if choice == "YES":
@@ -106,6 +117,8 @@ while True:
                 command_add(shlex.split(command)[1], shlex.split(command)[2])
         elif shlex.split(command)[0] == "remove":
             command_remove(shlex.split(command)[1])
+        elif shlex.split(command)[0] == "rename":
+            command_rename(shlex.split(command)[1], shlex.split(command)[2])
         elif shlex.split(command)[0] == "reset":
             command_reset()
         elif shlex.split(command)[0] == "exit":
