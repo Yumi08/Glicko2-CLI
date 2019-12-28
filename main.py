@@ -4,7 +4,7 @@ import os
 import shlex
 from dotenv import load_dotenv
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 
 load_dotenv()
 
@@ -42,17 +42,26 @@ def command_info(player):
     print(f"-- {player}\'s Info --")
     print(f"Rating: {round(players[player].mu)}")
     print(f"Deviation: {round(players[player].phi)}")
-def command_add(name, mu=None):
-    if mu == None:
-        mu = 1500
-    players[name] = env.create_rating(mu=mu)
-    print("Adding player.")
 def command_ranks():
     ranks = {k: v for k, v in sorted(players.items(), key=lambda item: item[1].mu, reverse=True)}
     i = 1
     for player in ranks:
         print(f"{i}. {player} - {round(players[player].mu)}")
         i += 1
+def command_recommend(player):
+    ranks = {k: v for k, v in sorted(players.items(), key=lambda item: abs(players[player].mu - item[1].mu), reverse=False)}
+    i = 0
+    for player_ in ranks:
+        if i == 0:
+            i += 1
+            continue
+        print(f"{i}. {player_} - {round(players[player_].mu)} (Diff: {round(abs(players[player].mu - players[player_].mu))})")
+        i += 1
+def command_add(name, mu=None):
+    if mu == None:
+        mu = 1500
+    players[name] = env.create_rating(mu=mu)
+    print("Adding player.")
 def command_remove(name):
     choice = input(f"Are you sure you want to remove player \"{name}\"? (YES or NO): ")
     if choice == "YES":
@@ -86,13 +95,15 @@ while True:
             command_match(shlex.split(command)[1], shlex.split(command)[2])
         elif shlex.split(command)[0] == "info":
             command_info(shlex.split(command)[1])
+        elif shlex.split(command)[0] == "ranks":
+            command_ranks()
+        elif shlex.split(command)[0] == "recommend":
+            command_recommend(shlex.split(command)[1])
         elif shlex.split(command)[0] == "add":
             if len(shlex.split(command)) == 2:
                 command_add(shlex.split(command)[1])
             else:
                 command_add(shlex.split(command)[1], shlex.split(command)[2])
-        elif shlex.split(command)[0] == "ranks":
-            command_ranks()
         elif shlex.split(command)[0] == "remove":
             command_remove(shlex.split(command)[1])
         elif shlex.split(command)[0] == "reset":
