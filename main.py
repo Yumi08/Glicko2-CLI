@@ -4,6 +4,8 @@ import os
 import shlex
 from dotenv import load_dotenv
 
+VERSION = "1.0.0"
+
 load_dotenv()
 
 env = glicko2.Glicko2()
@@ -71,6 +73,7 @@ if os.path.exists("ratings.pkl"):
     with open("ratings.pkl", "rb") as file:
         players = pickle.load(file)
 
+print(f"Welcome to Glicko2-CLI v{VERSION}")
 if os.getenv("DEBUG") == "True":
     print("DEBUG MODE")
 
