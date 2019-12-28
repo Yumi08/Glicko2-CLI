@@ -42,6 +42,15 @@ def command_info(player):
     print(f"-- {player}\'s Info --")
     print(f"Rating: {round(players[player].mu)}")
     print(f"Deviation: {round(players[player].phi)}")
+def command_recommend(player):
+    ranks = {k: v for k, v in sorted(players.items(), key=lambda item: abs(players[player].mu - item[1].mu), reverse=False)}
+    i = 0
+    for player_ in ranks:
+        if i == 0:
+            i += 1
+            continue
+        print(f"{i}. {player_} - {round(players[player_].mu)} (Diff: {round(abs(players[player].mu - players[player_].mu))})")
+        i += 1
 def command_add(name, mu=None):
     if mu == None:
         mu = 1500
@@ -86,6 +95,8 @@ while True:
             command_match(shlex.split(command)[1], shlex.split(command)[2])
         elif shlex.split(command)[0] == "info":
             command_info(shlex.split(command)[1])
+        elif shlex.split(command)[0] == "recommend":
+            command_recommend(shlex.split(command)[1])
         elif shlex.split(command)[0] == "add":
             if len(shlex.split(command)) == 2:
                 command_add(shlex.split(command)[1])
