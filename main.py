@@ -5,7 +5,7 @@ import shlex
 import random
 from dotenv import load_dotenv
 
-VERSION = "1.5.0"
+VERSION = "1.5.1"
 
 load_dotenv()
 
@@ -76,7 +76,7 @@ def command_recommend(player):
         if i == 0:
             i += 1
             continue
-        print(f"{i}. {player_} - {round(players[player_].mu)} (Diff: {round(abs(players[player].mu - players[player_].mu))})")
+        print(f"{i}. {player_} - {round(players[player_].mu)} (Diff: {round(players[player_].mu - players[player].mu)})")
         i += 1
 def command_recommendr():
     random_player = random.choice(list(players.keys()))
