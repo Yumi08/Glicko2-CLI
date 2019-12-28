@@ -2,9 +2,10 @@ import glicko2
 import pickle
 import os
 import shlex
+import random
 from dotenv import load_dotenv
 
-VERSION = "1.4.0"
+VERSION = "1.5.0"
 
 load_dotenv()
 
@@ -77,6 +78,10 @@ def command_recommend(player):
             continue
         print(f"{i}. {player_} - {round(players[player_].mu)} (Diff: {round(abs(players[player].mu - players[player_].mu))})")
         i += 1
+def command_recommendr():
+    random_player = random.choice(list(players.keys()))
+    ranks = {k: v for k, v in sorted(players.items(), key=lambda item: abs(players[random_player].mu - item[1].mu), reverse=False)}
+    print(f"{random_player} vs {list(ranks)[1]}")
 def command_add(name, mu=None):
     if mu == None:
         mu = 1500
@@ -129,6 +134,7 @@ potential [winner] [loser] - Simulate a match between two players. Ranks will no
 info [player] - Get information about a specific player.
 ranks - Show the leaderboard.
 recommend [player] - See who matchmaking thinks a certain player should play against.
+recommendr - Allow matchmaking to make a random match.
 add [player] [rating=1500] - Add a player.
 remove [player] - Remove a player.
 rename [player initial] [player final] - Rename a player.
@@ -144,6 +150,8 @@ exit - Exit.""")
             command_ranks()
         elif shlex.split(command)[0] == "recommend":
             command_recommend(shlex.split(command)[1])
+        elif shlex.split(command)[0] == "recommendr":
+            command_recommendr()
         elif shlex.split(command)[0] == "add":
             if len(shlex.split(command)) == 2:
                 command_add(shlex.split(command)[1])
