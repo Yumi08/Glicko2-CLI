@@ -31,6 +31,14 @@ def command_match(player1, player2):
     if DEBUG:
         print(f"[PLAYER 1: {rank1_initial} -> {rank1_final}]")
         print(f"[PLAYER 2: {rank2_initial} -> {rank2_final}]")
+def command_info(player):
+    if not player in players:
+        print("Player unknown.")
+        return
+    
+    print(f"-- {player}\'s Info --")
+    print(f"Rating: {round(players[player].mu)}")
+    print(f"Deviation: {round(players[player].phi)}")
 def command_add(name, mu=None):
     if mu == None:
         mu = 1500
@@ -69,6 +77,8 @@ while True:
     if command != "":
         if shlex.split(command)[0] == "match":
             command_match(shlex.split(command)[1], shlex.split(command)[2])
+        elif shlex.split(command)[0] == "info":
+            command_info(shlex.split(command)[1])
         elif shlex.split(command)[0] == "add":
             if len(shlex.split(command)) == 2:
                 command_add(shlex.split(command)[1])
@@ -86,6 +96,10 @@ while True:
             print("Unknown command.")
     else:
         print("Nevermind.")
+
+    # Save players
+    with open("ratings.pkl", "wb") as output:
+        pickle.dump(players, output, pickle.HIGHEST_PROTOCOL)
 
 # Save players
 with open("ratings.pkl", "wb") as output:
