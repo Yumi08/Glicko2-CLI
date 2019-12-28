@@ -4,7 +4,7 @@ import os
 import shlex
 from dotenv import load_dotenv
 
-VERSION = "1.3.0"
+VERSION = "1.4.0"
 
 load_dotenv()
 
@@ -122,7 +122,19 @@ while True:
 
     # Execute commands
     if command != "":
-        if shlex.split(command)[0] == "match":
+        if shlex.split(command)[0] == "help":
+            print("""--- Help ---
+match [winner] [loser] - Log a match between two players.
+potential [winner] [loser] - Simulate a match between two players. Ranks will not be altered.
+info [player] - Get information about a specific player.
+ranks - Show the leaderboard.
+recommend [player] - See who matchmaking thinks a certain player should play against.
+add [player] [rating=1500] - Add a player.
+remove [player] - Remove a player.
+rename [player initial] [player final] - Rename a player.
+reset - Reset everything.
+exit - Exit.""")
+        elif shlex.split(command)[0] == "match":
             command_match(shlex.split(command)[1], shlex.split(command)[2])
         elif shlex.split(command)[0] == "potential":
             command_potential(shlex.split(command)[1], shlex.split(command)[2])
