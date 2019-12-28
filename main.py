@@ -4,7 +4,7 @@ import os
 import shlex
 from dotenv import load_dotenv
 
-VERSION = "1.2.0"
+VERSION = "1.3.0"
 
 load_dotenv()
 
@@ -28,6 +28,26 @@ def command_match(player1, player2):
     rank2_final = players[player2]
 
     print(f"{player1} wins against {player2}!")
+    print(f"{player1}: +{round(rank1_final.mu - rank1_initial.mu)} to {round(rank1_final.mu)}")
+    print(f"{player2}: -{abs(round(rank2_final.mu - rank2_initial.mu))} to {round(rank2_final.mu)}")
+
+    if os.getenv("DEBUG") == "True":
+        print(f"[PLAYER 1: {rank1_initial} -> {rank1_final}]")
+        print(f"[PLAYER 2: {rank2_initial} -> {rank2_final}]")
+def command_potential(player1, player2):
+    if (not player1 in players) or (not player2 in players):
+        print("Player unknown.")
+        return
+    
+    rank1_initial = players[player1]
+    rank2_initial = players[player2]
+
+    result = env.rate_1vs1(players[player1], players[player2])
+
+    rank1_final = result[0]
+    rank2_final = result[1]
+
+    print(f"If {player1} won against {player2}:")
     print(f"{player1}: +{round(rank1_final.mu - rank1_initial.mu)} to {round(rank1_final.mu)}")
     print(f"{player2}: -{abs(round(rank2_final.mu - rank2_initial.mu))} to {round(rank2_final.mu)}")
 
@@ -104,6 +124,8 @@ while True:
     if command != "":
         if shlex.split(command)[0] == "match":
             command_match(shlex.split(command)[1], shlex.split(command)[2])
+        elif shlex.split(command)[0] == "potential":
+            command_potential(shlex.split(command)[1], shlex.split(command)[2])
         elif shlex.split(command)[0] == "info":
             command_info(shlex.split(command)[1])
         elif shlex.split(command)[0] == "ranks":
